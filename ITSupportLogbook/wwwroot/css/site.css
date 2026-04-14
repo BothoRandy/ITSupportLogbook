@@ -1,0 +1,497 @@
+﻿/* ============================================================
+   IT Support Logbook - Unified Government Theme
+   ============================================================ */
+
+:root {
+    --gov-navy: #0a2240;
+    --gov-blue: #1a4b8c;
+    --gov-mid: #2563ab;
+    --gov-light: #e8f0fb;
+    --gold: #c9a84c;
+    --gold-light: #f0d98a;
+    --white: #ffffff;
+    --text-dark: #0d1b2e;
+    --text-mid: #3a4d63;
+    --text-light: #7a8fa6;
+    --border: #cdd9ea;
+    --error: #c0392b;
+    --success: #1e7e4a;
+    --input-bg: #f4f8ff;
+    --shadow: 0 10px 35px rgba(10, 34, 64, 0.15);
+    --card-radius: 18px;
+}
+
+/* ============================================================
+   GLOBAL
+   ============================================================ */
+
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', 'Inter', 'Source Sans 3', sans-serif;
+    background: linear-gradient(135deg, var(--gov-navy), var(--gov-blue));
+    min-height: 100vh;
+    margin: 0;
+    color: #10243d;
+    font-weight: 500;
+    overflow-x: hidden;
+    position: relative;
+}
+
+    body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle at 20% 20%, rgba(37, 99, 171, 0.35), transparent 40%), radial-gradient(circle at 80% 80%, rgba(201, 168, 76, 0.12), transparent 35%), repeating-linear-gradient( 45deg, transparent, transparent 40px, rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 41px );
+        z-index: 0;
+        pointer-events: none;
+    }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+
+.navbar {
+    background: rgba(10, 34, 64, 0.92) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(201, 168, 76, 0.35);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    z-index: 1000;
+}
+
+.navbar-brand,
+.navbar-brand:hover {
+    color: var(--white) !important;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.92) !important;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+    .nav-link:hover,
+    .nav-link.active {
+        color: var(--gold) !important;
+    }
+
+/* ============================================================
+   PAGE CONTAINER
+   ============================================================ */
+
+main {
+    position: relative;
+    z-index: 2;
+}
+
+.container,
+.container-fluid {
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card,
+.auth-card {
+    background: rgba(255,255,255,0.98);
+    border: none;
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--gov-navy), var(--gov-blue));
+    color: var(--white);
+    border-bottom: none;
+    font-weight: 700;
+    padding: 1rem 1.25rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* ============================================================
+   LOGIN PAGE
+   ============================================================ */
+
+.auth-page {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 2.5rem;
+    animation: fadeUp 0.4s ease;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+    .auth-logo img {
+        height: 80px;
+        width: auto;
+    }
+
+.auth-title {
+    text-align: center;
+    color: var(--gov-navy);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #4e647d;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.small-muted,
+.text-muted {
+    color: #556b84 !important;
+    font-weight: 600;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+
+.form-label,
+label {
+    font-weight: 700;
+    color: #1b365d;
+    margin-bottom: 0.45rem;
+}
+
+.form-control,
+.form-select,
+input,
+select,
+textarea {
+    border: 1.5px solid var(--border);
+    background: var(--input-bg);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    color: #0d1b2e;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+    .form-control::placeholder,
+    input::placeholder,
+    textarea::placeholder {
+        color: #5f738b;
+        font-weight: 500;
+        opacity: 1;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--gov-mid);
+        background: var(--white);
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 171, 0.15);
+    }
+
+.form-check-label {
+    color: #1b365d;
+    font-weight: 600;
+}
+
+.form-check-input:focus,
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus {
+    box-shadow: 0 0 0 0.15rem rgba(37, 99, 171, 0.25);
+}
+
+/* ============================================================
+   PASSWORD TOGGLE
+   ============================================================ */
+
+.pwd-wrapper {
+    position: relative;
+}
+
+.pwd-toggle {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+}
+
+    .pwd-toggle:hover {
+        color: var(--gov-blue);
+    }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--gov-blue), var(--gov-mid));
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--gov-navy), var(--gov-blue));
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(10, 34, 64, 0.2);
+    }
+
+.btn-success,
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-danger {
+    font-weight: 700;
+}
+
+.btn-outline-primary {
+    border-color: var(--gov-blue);
+    color: var(--gov-blue);
+}
+
+    .btn-outline-primary:hover {
+        background: var(--gov-blue);
+        border-color: var(--gov-blue);
+        color: var(--white);
+    }
+
+/* ============================================================
+   LOGIN OPTIONS
+   ============================================================ */
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0 1.5rem;
+}
+
+.forgot-link,
+a {
+    font-weight: 600;
+}
+
+.forgot-link {
+    color: var(--gov-blue);
+    font-size: 0.88rem;
+    text-decoration: none;
+}
+
+    .forgot-link:hover {
+        color: var(--gov-navy);
+        text-decoration: underline;
+    }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+
+.table {
+    background: rgba(255,255,255,0.98);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+    .table thead {
+        background: var(--gov-navy);
+        color: var(--white);
+    }
+
+        .table thead th {
+            border-bottom: none;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+    .table tbody td {
+        color: #1b365d;
+        font-weight: 600;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(232, 240, 251, 0.45);
+    }
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+
+.badge.bg-success {
+    background-color: var(--success) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--gold-light) !important;
+    color: var(--text-dark) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--error) !important;
+}
+
+/* ============================================================
+   ALERTS
+   ============================================================ */
+
+.alert-success {
+    background: rgba(30, 126, 74, 0.1);
+    border: 1px solid rgba(30, 126, 74, 0.2);
+    color: var(--success);
+}
+
+.alert-danger,
+.validation-summary-errors {
+    background: rgba(192, 57, 43, 0.08);
+    border: 1px solid rgba(192, 57, 43, 0.2);
+    color: var(--error);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem 0;
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+}
+
+    footer a {
+        color: var(--gold-light);
+        text-decoration: none;
+    }
+
+        footer a:hover {
+            color: var(--gold);
+        }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .login-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    p,
+    span,
+    small,
+    .text-dark {
+        color: #10243d;
+    }
+
+    label,
+    .form-label {
+        color: #f4f8ff !important;
+        font-weight: 700;
+    }
+
+    .card label,
+    .card .form-label,
+    .auth-card label,
+    .auth-card .form-label {
+        color: #1b365d !important;
+    }
+
+    hr {
+        border-color: rgba(255,255,255,0.15);
+    }
+
+    .container > h1,
+    .container > h2,
+    .container > h3,
+    .container-fluid > h1,
+    .container-fluid > h2,
+    .container-fluid > h3 {
+        color: #ffffff;
+    }
+
+    .text-danger {
+        color: #ffb3b3 !important;
+        font-weight: 600;
+    }
+}

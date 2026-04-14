@@ -1,0 +1,31 @@
+﻿@model IEnumerable<ITSupportLogbook.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2>Registered Users</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.FullName</td>
+                <td>@u.UserName</td>
+                <td>@u.Email</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@u.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@u.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
