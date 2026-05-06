@@ -2,13 +2,30 @@ using ITSupportLogbook.Data;
 using ITSupportLogbook.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+var provider = builder.Configuration["DatabaseProvider"];
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (provider == "Postgres")
+    {
+        var conn = builder.Configuration.GetConnectionString("Postgres");
 
+        options.UseNpgsql(conn);
+    }
+    else
+    {
+        var conn = builder.Configuration.GetConnectionString("SqlServer");
+
+        options.UseSqlServer(conn, b =>
+            b.MigrationsAssembly("ITSupportLogbook.SqlServerMigrations"));
+    }
+});
 // Identity (Login/Register)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
