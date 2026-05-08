@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ITSupportLogbook.Models;
+using ITSupportLogbook.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,7 +28,9 @@ namespace ITSupportLogbook.Data
                 {
                     UserName = adminUsername,
                     Email = "admin@local",
-                    FullName = "System Admin",
+                    FirstName = "System",
+                    LastName = "Admin",
+                    Role = "Admin",
                     EmailConfirmed = true
                 };
 

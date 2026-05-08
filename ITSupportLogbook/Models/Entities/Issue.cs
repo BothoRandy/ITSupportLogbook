@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ITSupportLogbook.Models
+namespace ITSupportLogbook.Models.Entities
 {
     public class Issue
     {

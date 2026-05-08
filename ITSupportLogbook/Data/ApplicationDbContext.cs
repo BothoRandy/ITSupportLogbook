@@ -1,4 +1,4 @@
-﻿using ITSupportLogbook.Models;
+﻿using ITSupportLogbook.Models.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +11,7 @@ namespace ITSupportLogbook.Data
         {
         }
 
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Issue> Issues { get; set; }
     }
 }

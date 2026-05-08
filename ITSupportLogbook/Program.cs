@@ -1,8 +1,8 @@
 using ITSupportLogbook.Data;
-using ITSupportLogbook.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
+using ITSupportLogbook.Models.Entities;
 
 Env.Load();
 

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using ITSupportLogbook.Models;
+using ITSupportLogbook.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,9 +36,10 @@ namespace ITSupportLogbook.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
 
-            user.FullName = model.FullName;
-            user.Email = model.Email;
-            user.UserName = model.UserName;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Role = model.Role;
+            
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)

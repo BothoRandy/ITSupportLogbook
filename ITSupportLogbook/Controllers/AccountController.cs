@@ -1,8 +1,10 @@
 ﻿using System.Threading.Tasks;
-using ITSupportLogbook.Models;
+using ITSupportLogbook.Models.Entities;
+using ITSupportLogbook.Models.DTOs;
 using ITSupportLogbook.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ITSupportLogbook.Services;
 
 namespace ITSupportLogbook.Controllers
 {
@@ -10,6 +12,7 @@ namespace ITSupportLogbook.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly AuthService authService;
 
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
@@ -59,30 +62,17 @@ namespace ITSupportLogbook.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var user = new ApplicationUser
+            try
             {
-                UserName = model.Username,
-                Email = model.Email,
-                FullName = model.FullName
-            };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Issues");
+                var user = await authService.RegisterAsync(registerUserDto);
+                return Ok(user);
             }
-
-            foreach (var err in result.Errors)
-                ModelState.AddModelError("", err.Description);
-
-            return View(model);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]

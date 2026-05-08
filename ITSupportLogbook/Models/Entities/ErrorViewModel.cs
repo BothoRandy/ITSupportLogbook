@@ -1,4 +1,4 @@
-namespace ITSupportLogbook.Models
+namespace ITSupportLogbook.Models.Entities
 {
     public class ErrorViewModel
     {
