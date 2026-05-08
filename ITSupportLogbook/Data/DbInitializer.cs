@@ -18,8 +18,12 @@ namespace ITSupportLogbook.Data
             const string adminUsername = "admin";
             const string adminPassword = "Admin123!";
 
-            if (!await roleManager.RoleExistsAsync(adminRole))
-                await roleManager.CreateAsync(new IdentityRole(adminRole));
+            string[] roles = ["Admin", "IT", "User"];
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                    await roleManager.CreateAsync(new IdentityRole(role));
+            }
 
             var adminUser = await userManager.FindByNameAsync(adminUsername);
             if (adminUser == null)
@@ -38,7 +42,7 @@ namespace ITSupportLogbook.Data
                 if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors));
             }
 
-            if (!await userManager.IsInRoleAsync(adminUser, adminRole))
+            if (adminUser != null && !await userManager.IsInRoleAsync(adminUser, adminRole))
                 await userManager.AddToRoleAsync(adminUser, adminRole);
         }
     }

@@ -6,6 +6,7 @@ namespace ITSupportLogbook.Models.Entities
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+
         public string Role { get; set; } = "users"; //admin, it, user
 
 

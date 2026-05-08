@@ -62,17 +62,34 @@ namespace ITSupportLogbook.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            try
+            if (!ModelState.IsValid) return View(model);
+
+            var username = $"{model.FirstName[0]}{model.LastName}".ToLower();
+            var email = $"{username}@gov.bw";
+
+            var user = new ApplicationUser
             {
-                var user = await authService.RegisterAsync(registerUserDto);
-                return Ok(user);
-            }
-            catch (Exception ex)
+                UserName = username,
+                Email = email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Role = "user"
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
             {
-                return BadRequest(ex.Message);
+                await _userManager.AddToRoleAsync(user, "user");
+                return RedirectToAction("Login");
             }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error.Description);
+
+            return View(model);
         }
 
         [HttpPost]
