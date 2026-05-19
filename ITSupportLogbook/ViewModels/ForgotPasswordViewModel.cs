@@ -2,13 +2,17 @@
 
 namespace ITSupportLogbook.ViewModels
 {
-    public class RegisterViewModel
+    public class ForgotPasswordViewModel
     {
         [Required]
-        public string FirstName { get; set; } = "";
+        [EmailAddress]
+        public string Email { get; set; } = "";
+    }
 
-        [Required]
-        public string LastName { get; set; } = "";
+    public class ResetPasswordViewModel
+    {
+        public string Token { get; set; } = "";
+        public string Email { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]

@@ -6,20 +6,25 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ITSupportLogbook.Services;
 
+
 namespace ITSupportLogbook.Controllers
 {
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly AuthService authService;
+        //private readonly AuthService authService;
+        private readonly EmailService _emailService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, EmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
+
+        //Login API
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
@@ -61,6 +66,8 @@ namespace ITSupportLogbook.Controllers
             return View(new RegisterViewModel());
         }
 
+
+        //Register User API
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
@@ -92,6 +99,8 @@ namespace ITSupportLogbook.Controllers
             return View(model);
         }
 
+
+        //Logout API
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
@@ -104,5 +113,78 @@ namespace ITSupportLogbook.Controllers
         {
             return View();
         }
+
+        //Forgot Password API
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetLink = Url.Action(
+                    action: "ResetPassword",
+                    controller: "Account",
+                    values: new { token, email = model.Email },
+                    protocol: Request.Scheme,
+                    host: Request.Host.Value
+                );
+
+               // Console.WriteLine($"Reset link: {resetLink ?? "NULL"}");
+
+                try
+                {
+                    await _emailService.SendPasswordResetAsync(model.Email, resetLink!);
+                    Console.WriteLine("Email sent successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Email error: {ex.Message}");
+                    ModelState.AddModelError("", $"Email error: {ex.Message}");
+                    return View(model);
+                }
+            }
+
+            return RedirectToAction("ForgotPasswordConfirmation");
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            return View(new ResetPasswordViewModel { Token = token, Email = email });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return RedirectToAction("Login");
+
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded)
+                return RedirectToAction("Login");
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error.Description);
+
+            return View(model);
+        }
+
     }
 }

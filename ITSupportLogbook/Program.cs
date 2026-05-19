@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using ITSupportLogbook.Models.Entities;
+using ITSupportLogbook.Services;
 
-Env.Load();
+DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
 var provider = builder.Configuration["DatabaseProvider"];
 
 // Database
@@ -48,6 +50,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 // MVC
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
 
