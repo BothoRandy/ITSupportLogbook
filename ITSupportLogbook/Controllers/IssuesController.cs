@@ -7,6 +7,7 @@ using ITSupportLogbook.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ITSupportLogbook.ViewModels;
 
 namespace ITSupportLogbook.Controllers
 {
@@ -114,7 +115,7 @@ namespace ITSupportLogbook.Controllers
             var utf8WithBom = new UTF8Encoding(true);
             var bytes = utf8WithBom.GetBytes(sb.ToString());
 
-            var fileName = $"ITSupportLogs_{DateTime.Now:yyyyMMdd_HHmm}.csv";
+            var fileName = $"ITSupportLogs_{DateTime.UtcNow:yyyyMMdd_HHmm}.csv";
             return File(bytes, "text/csv", fileName);
         }
 
@@ -157,8 +158,7 @@ namespace ITSupportLogbook.Controllers
             if (!ModelState.IsValid)
                 return View(issue);
 
-            if (issue.DateReported == default)
-                issue.DateReported = DateTime.Now;
+            issue.DateReported = DateTime.UtcNow;
 
             _context.Issues.Add(issue);
             await _context.SaveChangesAsync();
@@ -187,6 +187,7 @@ namespace ITSupportLogbook.Controllers
 
             try
             {
+                issue.DateReported = DateTime.SpecifyKind(issue.DateReported, DateTimeKind.Utc); // 👈 fix kind
                 _context.Update(issue);
                 await _context.SaveChangesAsync();
             }
@@ -227,6 +228,53 @@ namespace ITSupportLogbook.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        // ---------------- IT Queue ----------------
+
+        [Authorize(Roles = "IT,Admin")]
+        [HttpGet]
+        public async Task<IActionResult> ITQueue()
+        {
+            var issues = await _context.Issues
+                .OrderByDescending(i => i.DateReported)
+                .ToListAsync();
+            return View(issues);
+        }
+
+        [Authorize(Roles = "IT,Admin")]
+        [HttpGet]
+        public async Task<IActionResult> UpdateStatus(int id)
+        {
+            var issue = await _context.Issues.FindAsync(id);
+            if (issue == null) return NotFound();
+
+            return View(new UpdateStatusViewModel
+            {
+                Id = issue.Id,
+                Status = issue.Status,
+                ResolutionNotes = issue.ResolutionNotes
+            });
+        }
+
+        [Authorize(Roles = "IT,Admin")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(UpdateStatusViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var issue = await _context.Issues.FindAsync(model.Id);
+            if (issue == null) return NotFound();
+
+            issue.Status = model.Status;
+            issue.ResolutionNotes = model.ResolutionNotes;
+
+            if (model.Status == "Resolved")
+                issue.DateResolved = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("ITQueue");
+        }
+
 
         private bool IssueExists(int id)
         {

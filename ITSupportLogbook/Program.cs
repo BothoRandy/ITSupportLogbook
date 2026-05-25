@@ -7,6 +7,7 @@ using ITSupportLogbook.Services;
 
 DotNetEnv.Env.Load();
 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
 var provider = builder.Configuration["DatabaseProvider"];

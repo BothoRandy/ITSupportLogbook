@@ -1,58 +1,82 @@
 ﻿@model ITSupportLogbook.Models.Entities.Issue
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Log New Issue";
 }
 
-<h1>Create</h1>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-4">Log New Issue</h4>
 
-<h4>Issue</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="OfficerName" class="control-label"></label>
-                <input asp-for="OfficerName" class="form-control" />
-                <span asp-validation-for="OfficerName" class="text-danger"></span>
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="OfficerName" class="form-label"></label>
+                        <input asp-for="OfficerName" class="form-control" />
+                        <span asp-validation-for="OfficerName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Extension" class="form-label"></label>
+                        <input asp-for="Extension" class="form-control" />
+                        <span asp-validation-for="Extension" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="IssueDescription" class="form-label"></label>
+                        <textarea asp-for="IssueDescription" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="IssueDescription" class="text-danger"></span>
+                    </div>
+
+                    <select asp-for="Status" class="form-select" id="statusSelect" onchange="updateStatusColor()">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary w-100">Create</button>
+                    </div>
+
+                    <div class="mt-3 text-center">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Extension" class="control-label"></label>
-                <input asp-for="Extension" class="form-control" />
-                <span asp-validation-for="Extension" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IssueDescription" class="control-label"></label>
-                <input asp-for="IssueDescription" class="form-control" />
-                <span asp-validation-for="IssueDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateReported" class="control-label"></label>
-                <input asp-for="DateReported" class="form-control" />
-                <span asp-validation-for="DateReported" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateResolved" class="control-label"></label>
-                <input asp-for="DateResolved" class="form-control" />
-                <span asp-validation-for="DateResolved" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+                function updateStatusColor() {
+            const select = document.getElementById('statusSelect');
+
+            if (select.value === 'Low') {
+                select.style.borderColor = '#198754';
+                select.style.color = '#198754';
+            } else if (select.value === 'Medium') {
+                select.style.borderColor = '#ffc107';
+                select.style.color = '#ffc107';
+            } else if (select.value === 'High') {
+                select.style.borderColor = '#dc3545';
+                select.style.color = '#dc3545';
+            } else if (select.value === 'Critical') {
+                select.style.borderColor = '#6f42c1';
+                select.style.color = '#6f42c1';
+            }
+        }
+
+        updateStatusColor();
+
+        updateStatusColor();
+    </script>
 }
