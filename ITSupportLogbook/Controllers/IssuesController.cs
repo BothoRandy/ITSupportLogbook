@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ITSupportLogbook.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITSupportLogbook.Controllers
 {
@@ -15,10 +16,13 @@ namespace ITSupportLogbook.Controllers
     public class IssuesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public IssuesController(ApplicationDbContext context)
+        public IssuesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         // GET: /Issues
@@ -155,10 +159,15 @@ namespace ITSupportLogbook.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Issue issue)
         {
-            if (!ModelState.IsValid)
-                return View(issue);
+            var user = await _userManager.GetUserAsync(User);
+            issue.OfficerName = user!.FullName ?? user.UserName!; // uses FullName, falls back to username
 
             issue.DateReported = DateTime.UtcNow;
+
+            ModelState.Remove("OfficerName"); // remove validation error since we set it manually
+
+            if (!ModelState.IsValid)
+                return View(issue);
 
             _context.Issues.Add(issue);
             await _context.SaveChangesAsync();

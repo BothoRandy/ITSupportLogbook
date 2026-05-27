@@ -10,25 +10,13 @@ DotNetEnv.Env.Load();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var builder = WebApplication.CreateBuilder(args);
 
-var provider = builder.Configuration["DatabaseProvider"];
-
 // Database
+var conn = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    if (provider == "Postgres")
-    {
-        var conn = builder.Configuration.GetConnectionString("Postgres");
-
-        options.UseNpgsql(conn);
-    }
-    else
-    {
-        var conn = builder.Configuration.GetConnectionString("SqlServer");
-
-        options.UseSqlServer(conn, b =>
-            b.MigrationsAssembly("ITSupportLogbook.SqlServerMigrations"));
-    }
+    options.UseNpgsql(conn);
 });
+
 // Identity (Login/Register)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -57,7 +45,6 @@ var app = builder.Build();
 
 await DbInitializer.SeedAdminAsync(app.Services);
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -72,7 +59,6 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Default route goes to Login page first
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
